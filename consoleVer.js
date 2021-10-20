@@ -1,5 +1,4 @@
-const input = (size) => {
-  let matrix = [];
+const input = (start, end, obstacles, size) => {
   let row = []
   for (let i = 0; i < size[0]; i++) {
     row.push({flag: '-'});
@@ -7,16 +6,15 @@ const input = (size) => {
   for (let i = 0; i < size[1]; i++) {
     matrix.push(row.concat());
   }
-  return matrix;
-}
-
-const fillMatrix = (start, end, obstacles, ) => {
   for (let i = 0; i < obstacles.length; i++) {
+    console.log( matrix[obstacles[i][1]][obstacles[i][0]])
     matrix[obstacles[i][1]][obstacles[i][0]] = {flag: 'o'};
   }
   matrix[start[1]][start[0]] = {flag: 's'}
   matrix[end[1]][end[0]] = {flag: 'e'}
+  return matrix;
 }
+
 
 const output = (matrix) => {
   console.log()
@@ -135,38 +133,41 @@ const findingCycle = (currentNode, end) => {
   }
 }
 
-// const startPoint = [7, 4];
-// const endPoint = [4, 1];
-// const size = [11, 6];
-// const obstacles = [
-  // [3, 0],
-  // [4, 0],
-  // [5, 0],
-  // [3, 1],
-  // [3, 2],
-  // [4, 2],
-  // [5, 2],
-  // [5, 1]
-  // [3, 1],
-  // [3, 2],
-  // [4, 2],
-  // [5, 2],
-  // [6, 2],
-  // [7, 2]
+const startPoint = [5, 4];
+const endPoint = [4, 1];
+const size = [11, 6];
+const obstacles = [
+  [3, 0],
+  [4, 0],
+  [5, 0],
+  [3, 1],
+  [3, 2],
+  [4, 2],
+  [5, 2],
+  [5, 1]
+  [3, 1],
+  [3, 2],
+  [4, 2],
+  [5, 2],
+  [6, 2],
+  [7, 2]
 
   // [3, 1],
   // [4, 2],
   // [4, 1],
-// ];
+];
 
-// const matrix = input(startPoint, endPoint, obstacles, size);
+const matrix = [] 
+matrix = input(startPoint, endPoint, obstacles, size);
+
 const buffer = [];
 const trace = [];
 const res = [];
+
 // findingCycle(startPoint, endPoint);
 
 // res.reverse().map(el => {
 //   output(matrix);
 //   matrix[el[1]][el[0]] = {flag: 'c'}
 // })
-// output(matrix);
+output(matrix);

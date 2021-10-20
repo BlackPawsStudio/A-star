@@ -10,6 +10,7 @@ let matrix = [];
 let startPoint = [];
 let endPoint = [];
 let obstacles = [];
+let diagon = true;
 
 const turnPoint = (point) => [point[1], point[0]]
 
@@ -47,54 +48,82 @@ submit.addEventListener('click', () => {
   popup.classList.toggle('disable');
 })
 
+let st = null;
 aside.addEventListener('click', (el) => {
-  const boxes = document.getElementsByClassName('box');
-  let st = null;
-  if (el.target.id == 'start') {
+  if (el.target.id === 'start') {
     el.target.setAttribute('disabled', true);
     st = 0;
   }
-  if (el.target.id == 'end') {
+  if (el.target.id === 'end') {
     el.target.setAttribute('disabled', true);
     st = 1;
   }
-  if (el.target.id == 'obst') {
+  if (el.target.id === 'obst') {
     st = 2;
   }
-  if (el.target.id == 'reset') {
+  if (el.target.id === 'reset') {
     st = 3;
   }
-  if (el.target.id == 'run') {
+  if (el.target.id === 'run') {
     findingCycle(startPoint, endPoint);
     res.reverse().map(el => {
         matrix[el[1]][el[0]] = {flag: 'c'}
-        render();
       })
+    render();
   }
-  field.addEventListener('click', (e) => {
+  if (el.target.id === 'reset-field') {
+    matrix.forEach(el => {
+      el.forEach(e => {
+        e.flag = '-';
+      })
+    });
+    buffer = [];
+    trace = [];
+    res = [];
+    obstacles = [];
+    startPoint = [];
+    endPoint = [];
+    document.getElementById('start').removeAttribute('disabled');
+    document.getElementById('end').removeAttribute('disabled');
+    render();
+  }
+  if (el.target.id === 'reset-page') {
+    document.location.reload();
+  }
+  if (el.target.id === 'walk') {
+    el.target.classList.toggle('no');
+    diagon = !diagon
+  }
+})
+field.addEventListener('click', (e) => {
+  if (e.target.id !== 'field') {
     if (st === 0) {
       st = null
       startPoint = [e.target.innerHTML.split(' ')[1], e.target.innerHTML.split(' ')[0]];
       matrix[startPoint[1]][startPoint[0]] = {flag: 's'};
-      render()
+      e.target.classList.value = 'box start';
     }
     if (st === 1) {
       st = null;
       endPoint = [e.target.innerHTML.split(' ')[1], e.target.innerHTML.split(' ')[0]];
       matrix[endPoint[1]][endPoint[0]] = {flag: 'e'};
-      render()
+      e.target.classList.value = 'box end';
     }
     if (st === 2) {
       obstacles.push([e.target.innerHTML.split(' ')[1], e.target.innerHTML.split(' ')[0]])
       for (let i = 0; i < obstacles.length; i++) {
         matrix[obstacles[i][1]][obstacles[i][0]] = {flag: 'o'};
       }
-      render()
+      e.target.classList.value = 'box obs';
     }
     if (st === 3) {
       point = [e.target.innerHTML.split(' ')[1], e.target.innerHTML.split(' ')[0]];
       matrix[point[1]][point[0]] = {flag: '-'};
-      render()
+      let index = obstacles.indexOf(point);
+      if (index > -1) {
+         obstacles.splice(index, 1);
+      }
+      e.target.classList.value = 'box empty';
     }
-  })
+  }
 })
