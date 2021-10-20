@@ -36,6 +36,23 @@ const render = () => {
       }
   aside.style.display = 'flex'
 }
+const rerender = () => {
+  const arr = document.getElementsByClassName('box');
+  let count = 0;
+  for (let j = 0; j < matrix.length; j++) {
+    for (let i = 0; i < matrix.length; i++) {
+      switch (matrix[j][i].flag) {
+        case'-': arr[count].classList = 'box empty'; break;
+        case's': arr[count].classList = 'box start'; break;
+        case'e': arr[count].classList = 'box end'; break;
+        case'w': arr[count].classList = 'box walked'; break;
+        case'o': arr[count].classList = 'box obs'; break;
+        case'c': arr[count].classList = 'box path'; break;
+      }
+      count ++;
+    }
+  }
+} 
 
 submit.addEventListener('click', () => {
   matrix = input([+xInput.value, +yInput.value]);
@@ -64,7 +81,7 @@ aside.addEventListener('click', (el) => {
     res.reverse().map(el => {
         matrix[el[1]][el[0]] = {flag: 'c'}
       })
-    render();
+    rerender();
   }
   if (el.target.id === 'reset-field') {
     matrix.forEach(el => {
@@ -81,7 +98,7 @@ aside.addEventListener('click', (el) => {
     mousedown = false;
     document.getElementById('start').removeAttribute('disabled');
     document.getElementById('end').removeAttribute('disabled');
-    render();
+    rerender();
   }
   if (el.target.id === 'walk') {
     el.target.classList.toggle('no');
@@ -98,7 +115,7 @@ aside.addEventListener('click', (el) => {
     for (let i = 0; i < obstacles.length; i++) {
       matrix[obstacles[i][1]][obstacles[i][0]] = {flag: 'o'};
     }
-    render();
+    rerender();
   }
 })
 field.addEventListener('click', (e) => {
@@ -126,9 +143,7 @@ field.addEventListener('click', (e) => {
       point = [e.target.innerHTML.split(' ')[1], e.target.innerHTML.split(' ')[0]];
       matrix[point[1]][point[0]] = {flag: '-'};
       let index = obstacles.indexOf(point);
-      if (index > -1) {
-         obstacles.splice(index, 1);
-      }
+      obstacles.splice(index, 1);
       e.target.classList.value = 'box empty';
     }
     mousedown = !mousedown;
