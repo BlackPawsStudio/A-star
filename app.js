@@ -12,11 +12,6 @@ let endPoint = [];
 let obstacles = [];
 let diagon = true;
 
-const turnPoint = (point) => [point[1], point[0]]
-
-const transponate = (array) => 
-  array[0].map((_, colIndex) => array.map(row => row[colIndex]));
-
 const render = () => {
   let rows = '';
   let coloumns = '';
@@ -83,16 +78,27 @@ aside.addEventListener('click', (el) => {
     obstacles = [];
     startPoint = [];
     endPoint = [];
+    mousedown = false;
     document.getElementById('start').removeAttribute('disabled');
     document.getElementById('end').removeAttribute('disabled');
     render();
   }
-  if (el.target.id === 'reset-page') {
-    document.location.reload();
-  }
   if (el.target.id === 'walk') {
     el.target.classList.toggle('no');
     diagon = !diagon
+  }
+  if (el.target.id === 'reset-path') {
+    buffer = [];
+    trace = [];
+    res = [];
+    matrix = [];
+    matrix = input([+xInput.value, +yInput.value]);
+    matrix[startPoint[1]][startPoint[0]] = {flag: 's'};
+    matrix[endPoint[1]][endPoint[0]] = {flag: 'e'};
+    for (let i = 0; i < obstacles.length; i++) {
+      matrix[obstacles[i][1]][obstacles[i][0]] = {flag: 'o'};
+    }
+    render();
   }
 })
 field.addEventListener('click', (e) => {
@@ -125,5 +131,20 @@ field.addEventListener('click', (e) => {
       }
       e.target.classList.value = 'box empty';
     }
+    mousedown = !mousedown;
   }
+})
+field.addEventListener('mouseover', (e) => {
+  if (e.target.id !== 'field') {
+    if (mousedown && st === 2) {
+      obstacles.push([e.target.innerHTML.split(' ')[1], e.target.innerHTML.split(' ')[0]])
+      for (let i = 0; i < obstacles.length; i++) {
+        matrix[obstacles[i][1]][obstacles[i][0]] = {flag: 'o'};
+      }
+      e.target.classList.value = 'box obs';
+    }
+  }
+})
+field.addEventListener('mouseleave', () => {
+  mousedown = false;
 })

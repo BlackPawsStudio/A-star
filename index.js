@@ -59,7 +59,7 @@ const checkNode = (currentNode, start) => {
           getDistance(currentNode.concat(), startPoint) + getDistance(currentNode.concat(), endPoint), 
           currentNode.concat(),
           start,
-          getDistance(currentNode.concat(), endPoint)
+          getDistance(currentNode.concat(), startPoint)
         ]);
         if (matrix[currentNode[1]][currentNode[0]].flag == 'e' && start[0] === startPoint[0] && start[1] === startPoint[1]) {
           trace.push([null, endPoint, startPoint]);
@@ -124,7 +124,6 @@ const findClosest = (iteration) => {
       res.push(iteration[i]);    
     }
   }
-
   const eCosts = [];
   for (let i = 0; i < res.length; i++) {
     eCosts.push(res[i][3]);
@@ -132,17 +131,13 @@ const findClosest = (iteration) => {
   const optimal = eCosts.sort(function(a, b) {
     return a - b;
   })[0];
-
-
-  // console.log(res, optimal)
   for (let i = 0; i < res.length; i++) {
     if (res[i][3] === optimal) {
-      console.log(res, eCosts, iteration)
       try {
         return res[i][1]    
       }
       catch {
-        alert('слышь говно собачье уебок вонючий что решил на меня лезть');
+        alert('агде...');
         render();
         return;
       }
@@ -152,18 +147,21 @@ const findClosest = (iteration) => {
 
 const findingCycle = (currentNode, end) => {
   if (currentNode[0] == end[0] && currentNode[1] == end[1]) {
-    res.push(endPoint, trace[trace.length - 1][1])
-    getTrace(trace[trace.length - 1]);
-    alert('priehali') 
+      res.push(endPoint, trace[trace.length - 1][1])
+      getTrace(trace[trace.length - 1]);
+      alert('priehali')
   }
   else {
     calculateNode(currentNode, diagon);
     const nextNode = findClosest(buffer);
-    if (nextNode) {
+    try {
       matrix[nextNode[1]][nextNode[0]] = {flag: 'w'};
-      // console.log()
-      // render()
       findingCycle(nextNode, end);
+    }
+    catch {
+      alert('агде...');
+      render();
+      return;
     }
   }
 }
