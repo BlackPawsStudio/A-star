@@ -73,9 +73,6 @@ aside.addEventListener('click', (el) => {
   if (el.target.id === 'obst') {
     st = 2;
   }
-  if (el.target.id === 'reset') {
-    st = 3;
-  }
   if (el.target.id === 'run') {
     findingCycle(startPoint, endPoint);
     res.reverse().map(el => {
